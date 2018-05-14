@@ -498,6 +498,8 @@ public class Bike {
 		}
 		
 		workbook.write(fileOutputStream);
+		fileOutputStream.close();
+		workbook.close();
 	}
 
 }

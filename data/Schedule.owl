@@ -1,0 +1,552 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#"
+     xml:base="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+    <owl:Ontology rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#AdoptOp -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#AdoptOp">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Part"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Operation"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#AdoptRes -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#AdoptRes">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain>
+            <owl:Class>
+                <owl:unionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Job"/>
+                    <rdf:Description rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Operation"/>
+                </owl:unionOf>
+            </owl:Class>
+        </rdfs:domain>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#ResourceGroup"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#CorresOp -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#CorresOp">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Job"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Operation"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#CorresPart -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#CorresPart">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Product"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Part"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#HaveJob -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#HaveJob">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#InverseFunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Order"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Job"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#HaveOrder -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#HaveOrder">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#InverseFunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#SalesOrder"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Order"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#HaveRes -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#HaveRes">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#InverseFunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#ResourceGroup"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Resource"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#JobNext -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#JobNext">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Job"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Job"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#LoadJob -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#LoadJob">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#InverseFunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Resource"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Job"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#NeedPart -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#NeedPart">
+        <rdfs:domain>
+            <owl:Class>
+                <owl:unionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Operation"/>
+                    <rdf:Description rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Order"/>
+                </owl:unionOf>
+            </owl:Class>
+        </rdfs:domain>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Part"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#OpNext -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#OpNext">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Operation"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Operation"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#ProducePart -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#ProducePart">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain>
+            <owl:Class>
+                <owl:unionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Order"/>
+                    <rdf:Description rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#SalesOrder"/>
+                </owl:unionOf>
+            </owl:Class>
+        </rdfs:domain>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Part"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#RelyOrder -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#RelyOrder">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Order"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Order"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#RelyPart -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#RelyPart">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Part"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Part"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#SupplyPart -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#SupplyPart">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Purchase"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#RawPart"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Data properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#RelationProperty -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#RelationProperty">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#RelationShip"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#arrivalDate -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#arrivalDate">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#SalesOrder"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#costMin -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#costMin">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#RelationProperty"/>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#R_AdoptRes"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#double"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#dueDate -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#dueDate">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#SalesOrder"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#earliestStartTime -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#earliestStartTime">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain>
+            <owl:Class>
+                <owl:unionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Job"/>
+                    <rdf:Description rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Order"/>
+                </owl:unionOf>
+            </owl:Class>
+        </rdfs:domain>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#latestEndTime -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#latestEndTime">
+        <rdfs:domain>
+            <owl:Class>
+                <owl:unionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Job"/>
+                    <rdf:Description rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Order"/>
+                </owl:unionOf>
+            </owl:Class>
+        </rdfs:domain>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#name -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#name">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain>
+            <owl:Class>
+                <owl:unionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Product"/>
+                    <rdf:Description rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Resource"/>
+                    <rdf:Description rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#ResourceGroup"/>
+                </owl:unionOf>
+            </owl:Class>
+        </rdfs:domain>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#opNo -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#opNo">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Operation"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
+        <rdfs:comment>工序号</rdfs:comment>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#orderId -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#orderId">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Order"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#partId -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#partId">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Part"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#partNum -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#partNum">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#RelationProperty"/>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain>
+            <owl:Class>
+                <owl:unionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#R_NeedPart"/>
+                    <rdf:Description rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#R_ProducePart"/>
+                    <rdf:Description rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#R_RelyPart"/>
+                    <rdf:Description rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#R_SupplyPart"/>
+                </owl:unionOf>
+            </owl:Class>
+        </rdfs:domain>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#purId -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#purId">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Purchase"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#salesOrderId -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#salesOrderId">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#SalesOrder"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#stock -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#stock">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#RawPart"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
+        <rdfs:comment>库存</rdfs:comment>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#supplyDate -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#supplyDate">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Purchase"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#type -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#type">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain>
+            <owl:Class>
+                <owl:unionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Job"/>
+                    <rdf:Description rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Operation"/>
+                </owl:unionOf>
+            </owl:Class>
+        </rdfs:domain>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Job -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Job"/>
+    
+
+
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#LeafOrder -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#LeafOrder">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Order"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Operation -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Operation"/>
+    
+
+
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Order -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Order"/>
+    
+
+
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Part -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Part"/>
+    
+
+
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#ProcessedPart -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#ProcessedPart">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Part"/>
+        <owl:disjointWith rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#RawPart"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Product -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Product"/>
+    
+
+
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Purchase -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Purchase"/>
+    
+
+
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#R_AdoptRes -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#R_AdoptRes">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#RelationShip"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#R_NeedPart -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#R_NeedPart">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#RelationShip"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#R_ProducePart -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#R_ProducePart">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#RelationShip"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#R_RelyPart -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#R_RelyPart">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#RelationShip"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#R_SupplyPart -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#R_SupplyPart">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#RelationShip"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#RawPart -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#RawPart">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Part"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#RelationShip -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#RelationShip"/>
+    
+
+
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Resource -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Resource"/>
+    
+
+
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#ResourceGroup -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#ResourceGroup"/>
+    
+
+
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#RootOrder -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#RootOrder">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Order"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#SalesOrder -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#SalesOrder"/>
+    
+
+
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#SalesPart -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#SalesPart">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Part"/>
+    </owl:Class>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 4.2.5.20160517-0735) https://github.com/owlcs/owlapi -->
+
