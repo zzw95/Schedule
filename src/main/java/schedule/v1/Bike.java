@@ -247,12 +247,19 @@ public class Bike {
 	
 	public void UpdateJobStatus(Node job){
 		job.setProperty("status", "Loaded");
+		String startTime = (String)job.getProperty("startTime");
 		String timestamp = (String)job.getProperty("endTime");
 		Calendar calendar = utils.ParseCalenderYMDHM(timestamp);
+		
+		Node order = this.db.GetRelateNodes(job, Bike.RelationshipTypes.HaveJob, Direction.INCOMING).get(0);
+		if(!order.hasProperty("startTime") || startTime.compareTo((String)order.getProperty("startTime"))<0){
+			order.setProperty("startTime", startTime);
+		}
+		
 		ArrayList<Node> nextJobs = this.db.GetRelateNodes(job,Bike.RelationshipTypes.JobNext, Direction.OUTGOING);
 		if(nextJobs.isEmpty()){
+			
 			// if all the jobs of this order are loaded, the order is finished.
-			Node order = this.db.GetRelateNodes(job, Bike.RelationshipTypes.HaveJob, Direction.INCOMING).get(0);
 		    ArrayList<Node> orderJobs = this.db.GetRelateNodes(order, Bike.RelationshipTypes.HaveJob, Direction.OUTGOING);
 		    boolean orderDone = true;
 		    for(Node orderJob:orderJobs){
@@ -264,6 +271,7 @@ public class Bike {
 		    }
 		    if(orderDone){
 		    	order.setProperty("status", "Loaded");
+		    	order.setProperty("endTime", timestamp);
 		    	System.out.println(String.format("Order %s has Finished! %s\n", order.getProperty("orderId"), order.getProperty("status")));
 		    	ArrayList<Node> nextOrders = this.db.GetRelateNodes(order, Bike.RelationshipTypes.RelyOrder, Direction.INCOMING);
 		    	if(nextOrders.isEmpty()){
@@ -301,7 +309,7 @@ public class Bike {
 		    			UpdateOrderTimeForward(nextOrder, calendar);
 		    		}
 		    	}
-		    }
+		    }// end if orderDone
 		}else{
 			for(Node nextJob:nextJobs){
 				// change the status    
@@ -349,7 +357,6 @@ public class Bike {
 			
 			System.out.println(salesOrder.getProperty("salesOrderId")+":"+utils.FormatCalendar(calendar));
 			UpdateOrderTimeForward(leafOrder, calendar);
-			System.out.println();  
 		}
 
 	}

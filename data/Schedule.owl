@@ -252,6 +252,23 @@
     
 
 
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#endTime -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#endTime">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain>
+            <owl:Class>
+                <owl:unionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Job"/>
+                    <rdf:Description rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Order"/>
+                </owl:unionOf>
+            </owl:Class>
+        </rdfs:domain>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
     <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#latestEndTime -->
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#latestEndTime">
@@ -352,6 +369,23 @@
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#salesOrderId">
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#SalesOrder"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#startTime -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#startTime">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain>
+            <owl:Class>
+                <owl:unionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Job"/>
+                    <rdf:Description rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Order"/>
+                </owl:unionOf>
+            </owl:Class>
+        </rdfs:domain>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
     </owl:DatatypeProperty>
     
