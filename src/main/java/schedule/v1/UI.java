@@ -49,8 +49,8 @@ import org.neo4j.graphdb.Transaction;
 public class UI {
 	JFrame frame;
 	JPanel choosePanel, ontoPanel, importPanel, cqlPanel, schedulePanel;
-	JTextField inputOntoField, inputDbField, inputExcelField, cqlField, outputExcelField;
-	JButton inputOntoButton, loadOntoButton, queryOntoButton, inputDbButton, inputExcelButton, startDbButton, importDbButton, runCqlButton, outputExcelButton, genButton;
+	JTextField inputOntoField, inputDbField, inputExcelField, cqlField, outputExcelField, exportExcelField;
+	JButton inputOntoButton, loadOntoButton, queryOntoButton, inputDbButton, inputExcelButton, startDbButton, importDbButton, runCqlButton, outputExcelButton, genButton, exportExcelButton, exportButton;
 	JComboBox ontoComboBox;
 	JTextArea ontoInfoTextArea, cqlInfoTextArea;
 	
@@ -87,7 +87,7 @@ public class UI {
 		frame.getContentPane().add(choosePanel, BorderLayout.NORTH);
 		GridBagLayout gbl_choosePanel = new GridBagLayout();
 		gbl_choosePanel.columnWidths = new int[]{0, 0};
-		gbl_choosePanel.rowHeights = new int[]{200, 125, 200,0};
+		gbl_choosePanel.rowHeights = new int[]{200, 125, 250,0};
 		gbl_choosePanel.columnWeights = new double[]{1.0, Double.MIN_VALUE};
 		gbl_choosePanel.rowWeights = new double[]{1.0, 1.0, 1.0,Double.MIN_VALUE};
 		choosePanel.setLayout(gbl_choosePanel);
@@ -259,9 +259,9 @@ public class UI {
 		choosePanel.add(cqlPanel, gbc_cqlPanel);
 		GridBagLayout gbl_cqlPanel = new GridBagLayout();
 		gbl_cqlPanel.columnWidths = new int[]{150, 0, 100};
-		gbl_cqlPanel.rowHeights = new int[]{50, 50,50,50};
+		gbl_cqlPanel.rowHeights = new int[]{50, 150,50};
 		gbl_cqlPanel.columnWeights = new double[]{0.0, 1.0,0.0};
-		gbl_cqlPanel.rowWeights = new double[]{1.0,1.0,1.0,1.0};
+		gbl_cqlPanel.rowWeights = new double[]{1.0,3.0,1.0};
 		cqlPanel.setLayout(gbl_cqlPanel);
 		
 		JLabel jlabel = new JLabel("Cypher Query", JLabel.CENTER);
@@ -304,9 +304,40 @@ public class UI {
 		gbc_scrollPane1.fill = GridBagConstraints.BOTH;
 		gbc_scrollPane1.gridx = 0;
 		gbc_scrollPane1.gridy = 1;
-		gbc_scrollPane1.gridheight = GridBagConstraints.REMAINDER;
-		gbc_scrollPane1.gridwidth = GridBagConstraints.REMAINDER;
+//		gbc_scrollPane1.gridheight = GridBagConstraints.REMAINDER;
+ 		gbc_scrollPane1.gridwidth = GridBagConstraints.REMAINDER;
 		cqlPanel.add(scrollPane1, gbc_scrollPane1);
+		
+		exportExcelButton = new JButton("Choose Excel");
+		exportExcelButton.addActionListener(new exportExcelButtonAL());
+		exportExcelButton.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 15));
+		GridBagConstraints gbc_exportExcelButton = new GridBagConstraints();
+		gbc_exportExcelButton.fill = GridBagConstraints.BOTH;
+		gbc_exportExcelButton.insets = new Insets(5, 5, 5, 5);
+		gbc_exportExcelButton.gridx = 0;
+		gbc_exportExcelButton.gridy = 2;
+		cqlPanel.add(exportExcelButton, gbc_exportExcelButton);
+		
+		exportExcelField = new JTextField();
+		exportExcelField.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 15));
+		GridBagConstraints gbc_exportExcelField = new GridBagConstraints();
+		gbc_exportExcelField.insets = new Insets(5, 5, 5, 5);
+		gbc_exportExcelField.fill = GridBagConstraints.BOTH;
+		gbc_exportExcelField.gridx = 1;
+		gbc_exportExcelField.gridy = 2;
+		cqlPanel.add(exportExcelField, gbc_exportExcelField);
+		
+		exportButton = new JButton("Export");
+		exportButton.addActionListener(new exportButtonAL());
+		exportButton.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 15));
+		GridBagConstraints gbc_exportButton = new GridBagConstraints();
+		gbc_exportButton.fill = GridBagConstraints.BOTH;
+		gbc_exportButton.insets = new Insets(5, 5, 5, 5);
+		gbc_exportButton.gridx = 2 ;
+		gbc_exportButton.gridy = 2;
+		cqlPanel.add(exportButton, gbc_exportButton);
+		
+		
 		
 		schedulePanel = new JPanel();
 		schedulePanel.setBorder(new TitledBorder(null, "Schedule", TitledBorder.CENTER, TitledBorder.TOP, new Font("Microsoft YaHei UI", Font.PLAIN, 18), null));
@@ -359,7 +390,7 @@ public class UI {
 		frame.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 15));
 		frame.setTitle("Neo4j Graph Database Application");
 		//frame.setBounds(100, 100, 750, 750);
-		frame.setSize(750, 750);
+		frame.setSize(800, 800);
 		frame.setLocationRelativeTo(null);
 		//frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
@@ -499,21 +530,8 @@ public class UI {
 					JOptionPane.showMessageDialog(frame, "The excel file doesn't exsit!", "Error", JOptionPane.ERROR_MESSAGE);
 				}else{
 					try{
-						ArrayList<ArrayList<String>> sheetTitles = new ArrayList<ArrayList<String>>();
-						ArrayList<ArrayList<ArrayList<String>>> sheetData = new ArrayList<ArrayList<ArrayList<String>>>();
-						utils.ReadTable(inputExcelField.getText(), sheetTitles, sheetData);
-						for(int i=0;i<sheetTitles.size();i++){
-							ArrayList<String> titles = sheetTitles.get(i);
-							ArrayList<ArrayList<String>> data = sheetData.get(i);
-						
-							System.out.println(titles);
-							System.out.println(data);
-							Importer importer = new Importer(db, kb);
-							try (Transaction tx = graphDb.beginTx()) {			
-								importer.ParseTable(titles, data);
-								tx.success();  
-							}
-						}
+						Importer importer = new Importer(inputExcelField.getText(), db, kb);
+						importer.Run();
 						JOptionPane.showMessageDialog(frame, "Excel data imported!", "Info", JOptionPane.INFORMATION_MESSAGE);
 					}catch (Exception e1){
 						JOptionPane.showMessageDialog(frame, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -596,6 +614,56 @@ public class UI {
 				}
 			}
 			
+		}
+		
+	}
+	
+	class exportExcelButtonAL implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			JFileChooser fileChooser=new JFileChooser();
+			fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+			if(tempDir!=null){
+				fileChooser.setCurrentDirectory(tempDir);
+			}
+			FileNameExtensionFilter filter2 = new FileNameExtensionFilter(
+			        "Excel 工作簿(*.xlsx)", "xlsx");
+			fileChooser.setFileFilter(filter2);
+			int result=fileChooser.showOpenDialog(frame);
+			if(result==JFileChooser.APPROVE_OPTION){
+				exportExcelField.setText(fileChooser.getSelectedFile().getPath());
+				tempDir=fileChooser.getCurrentDirectory();
+			}
+		}
+		
+	}
+	
+	class exportButtonAL implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			if(db==null){
+				JOptionPane.showMessageDialog(frame, "Please start the database!", "Error", JOptionPane.ERROR_MESSAGE);
+			}else if(kb==null){
+				JOptionPane.showMessageDialog(frame, "Please load the ontology!", "Error", JOptionPane.ERROR_MESSAGE);
+			}
+			else{
+				File excelFile=new File(exportExcelField.getText());
+				if(!excelFile.exists()){
+					JOptionPane.showMessageDialog(frame, "The excel file doesn't exsit!", "Error", JOptionPane.ERROR_MESSAGE);
+				}else{
+					try{
+						Exporter exporter = new Exporter(exportExcelField.getText(), db, kb);
+						exporter.Run();
+						JOptionPane.showMessageDialog(frame, "Excel data exported!", "Info", JOptionPane.INFORMATION_MESSAGE);
+					}catch (Exception e1){
+						JOptionPane.showMessageDialog(frame, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+					}// end catch
+				}// end else
+			}//end else
 		}
 		
 	}

@@ -18,11 +18,31 @@ public class Importer {
 	DatabaseUD db;
 	GraphDatabaseService graphDb;
 	KnowledgeBase kb;
+	String excelFile;
 
-	public Importer(DatabaseUD db, KnowledgeBase kb){
+	public Importer(String excelFile, DatabaseUD db, KnowledgeBase kb){
 		this.db=db;
 		this.graphDb=db.graphDb;
 		this.kb=kb;
+		this.excelFile=excelFile;
+	}
+	
+	public void Run() throws Exception{
+		ArrayList<ArrayList<String>> sheetTitles = new ArrayList<ArrayList<String>>();
+		ArrayList<ArrayList<ArrayList<String>>> sheetData = new ArrayList<ArrayList<ArrayList<String>>>();
+		utils.ReadTable(excelFile, sheetTitles, sheetData);
+		for(int i=0;i<sheetTitles.size();i++){
+			ArrayList<String> titles = sheetTitles.get(i);
+			ArrayList<ArrayList<String>> data = sheetData.get(i);
+		
+			System.out.println(titles);
+			System.out.println(data);
+			
+			try (Transaction tx = graphDb.beginTx()) {			
+				ParseTable(titles, data);
+				tx.success();  
+			}
+		}
 	}
 	
 	private OWLObjectProperty ParseTableClass(String entity, ArrayList<String> col, OWLClass primLabel, OWLDataProperty primLabelKeyProp, ArrayList<Node> primNodes, 
@@ -289,7 +309,7 @@ public class Importer {
 		
 		// Get the primary label and the key property
 		if(!kb.onto.containsClassInSignature(kb.pm.getIRI(":"+titles.get(0)))){
-			throw new Exception("First table title shouble be a class!");
+			throw new Exception("First table title should be a class!");
 		}
 		OWLClass primLabel = kb.factory.getOWLClass(":"+titles.get(0), kb.pm);
 		//Set<OWLClass> primLabelSupers = kb.GetClassSuper(primLabel);

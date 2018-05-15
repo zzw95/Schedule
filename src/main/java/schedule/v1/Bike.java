@@ -229,20 +229,25 @@ public class Bike {
 	public void GenerateJobs(){
 		// Generate operation jobs
 		String cql1 = "match (o:Order)-[pp:ProducePart]->(p:Part)-[:AdoptOp]->(op:Operation)-[ar:AdoptRes]->(res) "
-				+ "merge (o)-[:HaveJob]->(job:Job{type:op.type})-[:CorresOp]->(op) on create set job.status=\"Rest\""
+				+ "merge (o)-[:HaveJob]->(job:Job{type:op.type, jobNo:op.opNo})-[:CorresOp]->(op) on create set job.status=\"Rest\""
 				+ "merge (job)-[:AdoptRes{costMin:ar.costMin*pp.partNum}]->(res)";
 		this.db.RunCQL(cql1);
 		
+		String cq2 = "match (o:Order)-[pp:ProducePart]->(p:Part)-[:AdoptOp]->(op:Operation)<-[:CorresOp]->(job:Job) "
+				+ "match (op)-[np:NeedPart]->(p1:Part) "
+				+ "merge (job)-[:NeedPart{partNum:np.partNum*pp.partNum}]->(p1)";
+		this.db.RunCQL(cq2);
+		
 		
 		// Generate the precedence of jobs
-		String cql2 = "match (job1:Job)-[:CorresOp]->(op1)-[:OpNext]->(op2)<-[:CorresOp]-(job2:Job) "
+		String cql3 = "match (job1:Job)-[:CorresOp]->(op1)-[:OpNext]->(op2)<-[:CorresOp]-(job2:Job) "
 				+ "match (job1)<-[:HaveJob]-(o)-[:HaveJob]->(job2) "
 				+ "merge (job1)-[:JobNext]->(job2)";
-		this.db.RunCQL(cql2);
+		this.db.RunCQL(cql3);
 		
 		// Change the loading status
-		String cql3 = "match (job:Job) where job.status=\"Rest\" and not ()-[:JobNext]->(job) set job.status=\"Loading\"";
-		this.db.RunCQL(cql3);
+		String cql4 = "match (job:Job) where job.status=\"Rest\" and not ()-[:JobNext]->(job) set job.status=\"Loading\"";
+		this.db.RunCQL(cql4);
 	}
 	
 	public void UpdateJobStatus(Node job){
@@ -505,6 +510,7 @@ public class Bike {
 		}
 		
 		workbook.write(fileOutputStream);
+		fileOutputStream.flush();
 		fileOutputStream.close();
 		workbook.close();
 	}

@@ -121,6 +121,7 @@
         <rdfs:domain>
             <owl:Class>
                 <owl:unionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Job"/>
                     <rdf:Description rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Operation"/>
                     <rdf:Description rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Order"/>
                 </owl:unionOf>
@@ -269,6 +270,16 @@
     
 
 
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#jobNo -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#jobNo">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Job"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
+    </owl:DatatypeProperty>
+    
+
+
     <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#latestEndTime -->
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#latestEndTime">
@@ -354,9 +365,9 @@
     
 
 
-    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#purId -->
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#purchaseId -->
 
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#purId">
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#purchaseId">
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Purchase"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
