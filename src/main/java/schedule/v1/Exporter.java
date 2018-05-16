@@ -64,7 +64,7 @@ public class Exporter {
 	 	        	XSSFRow row = sheet.createRow(rowNum);
 	 	        	int cellNum=0;
 	 	        	//System.out.println(result.columns());
-	 		        for ( String key : titles){
+	 		        for ( String key : result.columns()){
 	 		            Object value = rowMap.get(key);
 	 		            XSSFCell cell = row.createCell(cellNum);
 	 		            if(value==null){
@@ -73,6 +73,8 @@ public class Exporter {
 	 		            	cell.setCellValue((int)value);
 	 		            }else if(value instanceof Double){
 	 		            	cell.setCellValue((Double)value);
+	 		            }else if(value instanceof Long){
+	 		            	cell.setCellValue((int)(long)value);
 	 		            }else{
 	 		            	cell.setCellValue(value.toString());
 	 		            }
@@ -100,14 +102,15 @@ public class Exporter {
 		
 		// Get the primary label and the key property
 		if(!kb.onto.containsClassInSignature(kb.pm.getIRI(":"+titles.get(0)))){
-			throw new Exception("First table title should be a class!");
+			throw new Exception(String.format("First table title %s should be a class!", titles.get(0)));
 		}
 		OWLClass primLabel = kb.factory.getOWLClass(":"+titles.get(0), kb.pm);
 		String primLabelVarName = primLabel.getIRI().getShortForm().toLowerCase()+vix;
 		OWLDataProperty primLabelKeyProp = kb.GetLabelKeyProp(primLabel);
 		
 		matchCQL +=String.format("match(%s:%s) ", primLabelVarName, primLabel.getIRI().getShortForm()); 
-		returnCQL += String.format("return %s.%s as %s", primLabelVarName, primLabelKeyProp.getIRI().getShortForm(), titles.get(0));
+		returnCQL += String.format("return %s.%s ", primLabelVarName, primLabelKeyProp.getIRI().getShortForm());
+		//returnCQL += String.format("return %s.%s as %s", primLabelVarName, primLabelKeyProp.getIRI().getShortForm(), titles.get(0));
 		
 		ArrayList<OWLClass> prevLabels = new ArrayList<OWLClass>();
 		ArrayList<String> prevLabelsVarNames = new ArrayList<String>();
@@ -123,7 +126,8 @@ public class Exporter {
 				prevLabels.add(label);
 				prevLabelsVarNames.add(labelVarName);
 				OWLDataProperty labelKeyProp = kb.GetLabelKeyProp(label);
-				returnCQL +=", "+ labelVarName+"."+labelKeyProp.getIRI().getShortForm()+" as "+entity;
+				returnCQL +=", "+ labelVarName+"."+labelKeyProp.getIRI().getShortForm();
+				//returnCQL +=", "+ labelVarName+"."+labelKeyProp.getIRI().getShortForm()+" as "+entity;
 				OWLObjectProperty op = kb.GetRelateBetweenClasses(primLabel, label);
 				if(op!=null){
 					String relateVarName = op.getIRI().getShortForm().toLowerCase() +vix;
@@ -203,7 +207,8 @@ public class Exporter {
 						OWLClass label = ranges.iterator().next();
 						OWLDataProperty labelKeyProp = kb.GetLabelKeyProp(label);
 						String labelVarName = label.getIRI().getShortForm().toLowerCase()+vix;
-						returnCQL +=", "+labelVarName+"."+labelKeyProp.getIRI().getShortForm()+" as "+entity;
+						returnCQL +=", "+labelVarName+"."+labelKeyProp.getIRI().getShortForm();
+						//returnCQL +=", "+labelVarName+"."+labelKeyProp.getIRI().getShortForm()+" as "+entity;
 						if(i==1){
 							matchCQL += String.format("-[%s:%s]-> (%s:%s) ", relateVarName, relate.getIRI().getShortForm(), labelVarName, label.getIRI().getShortForm());
 						}else{
@@ -220,7 +225,8 @@ public class Exporter {
 						OWLClass label = domains.iterator().next();
 						OWLDataProperty labelKeyProp = kb.GetLabelKeyProp(label);
 						String labelVarName = label.getIRI().getShortForm().toLowerCase()+vix;
-						returnCQL +=", "+labelVarName+"."+labelKeyProp.getIRI().getShortForm()+" as "+entity;
+						returnCQL +=", "+labelVarName+"."+labelKeyProp.getIRI().getShortForm();
+						//returnCQL +=", "+labelVarName+"."+labelKeyProp.getIRI().getShortForm()+" as "+entity;
 						if(i==1){
 							matchCQL += String.format("<-[%s:%s]- (%s:%s) ", relateVarName, relate.getIRI().getShortForm(), labelVarName, label.getIRI().getShortForm());
 						}else{
@@ -241,7 +247,8 @@ public class Exporter {
 							OWLClass label = ranges.iterator().next();
 							OWLDataProperty labelKeyProp = kb.GetLabelKeyProp(label);
 							String labelVarName = label.getIRI().getShortForm().toLowerCase()+vix;
-							returnCQL +=", "+labelVarName+"."+labelKeyProp.getIRI().getShortForm()+" as "+entity;
+							returnCQL +=", "+labelVarName+"."+labelKeyProp.getIRI().getShortForm();
+							//returnCQL +=", "+labelVarName+"."+labelKeyProp.getIRI().getShortForm()+" as "+entity;
 							if(k==0){
 								matchCQL += String.format("-[%s:%s]-> (%s:%s) ", relateVarName, relate.getIRI().getShortForm(), labelVarName, label.getIRI().getShortForm());
 							}else{
@@ -260,7 +267,8 @@ public class Exporter {
 							OWLClass label = domains.iterator().next();
 							OWLDataProperty labelKeyProp = kb.GetLabelKeyProp(label);
 							String labelVarName = label.getIRI().getShortForm().toLowerCase()+vix;
-							returnCQL +=", "+labelVarName+"."+labelKeyProp.getIRI().getShortForm()+" as "+entity;
+							returnCQL +=", "+labelVarName+"."+labelKeyProp.getIRI().getShortForm();
+							//returnCQL +=", "+labelVarName+"."+labelKeyProp.getIRI().getShortForm()+" as "+entity;
 							if(k==0){
 								matchCQL += String.format("<-[%s:%s]- (%s:%s) ", relateVarName, relate.getIRI().getShortForm(), labelVarName, label.getIRI().getShortForm());
 							}else{
@@ -285,20 +293,23 @@ public class Exporter {
 				Set<OWLClass> domains = kb.GetDataPropertyDomain(prop);
 				String range = kb.GetDataPropertyRange(prop);
 				if(domains.contains(primLabel)){
-					returnCQL += ", "+primLabelVarName+"."+prop.getIRI().getShortForm()+" as "+entity;
+					returnCQL += ", "+primLabelVarName+"."+prop.getIRI().getShortForm();
+					//returnCQL += ", "+primLabelVarName+"."+prop.getIRI().getShortForm()+" as "+entity;
 					continue;
 				}
 				if(prevRelate!=null){
 					Set<OWLDataProperty> relateProps = kb.GetRelateProps(prevRelate);
 					if(relateProps!=null && relateProps.contains(prop)){
-						returnCQL += ", "+prevRelateVarName + "."+prop.getIRI().getShortForm()+" as "+entity;
+						returnCQL += ", "+prevRelateVarName + "."+prop.getIRI().getShortForm();
+						//returnCQL += ", "+prevRelateVarName + "."+prop.getIRI().getShortForm()+" as "+entity;
 						continue;
 					}
 				}
 				if(!prevLabels.isEmpty()){
 					OWLClass prevLabel = prevLabels.get(prevLabels.size()-1);
 					if(domains.contains(prevLabel)){
-						returnCQL +=", "+prevLabelsVarNames.get(prevLabels.size()-1)+ "."+prop.getIRI().getShortForm()+" as "+entity;
+						returnCQL +=", "+prevLabelsVarNames.get(prevLabels.size()-1)+ "."+prop.getIRI().getShortForm();
+						//returnCQL +=", "+prevLabelsVarNames.get(prevLabels.size()-1)+ "."+prop.getIRI().getShortForm()+" as "+entity;
 						continue;
 					}
 				}

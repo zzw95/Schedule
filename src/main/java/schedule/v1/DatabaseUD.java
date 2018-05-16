@@ -86,10 +86,20 @@ public class DatabaseUD {
 	public Node GetNodeByProp(String labelName, String key, String value, Set<String> superLabels){
 		Node node = graphDb.findNode(Label.label(labelName), key, value);
 		if(node==null){
-			node = graphDb.createNode(Label.label(labelName));
-			node.setProperty(key, value);
 			for(String superLabel:superLabels){
-				node.addLabel(Label.label(superLabel));
+				node = graphDb.findNode(Label.label(superLabel), key, value);
+				if(node!=null){
+					break;
+				}
+			}
+			if(node==null){
+				node = graphDb.createNode(Label.label(labelName));
+				node.setProperty(key, value);
+				for(String superLabel:superLabels){
+					node.addLabel(Label.label(superLabel));
+				}
+			}else{
+				node.addLabel(Label.label(labelName));
 			}
 			
 		}

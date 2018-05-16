@@ -20,48 +20,45 @@ public class BGTest {
 //		
 		DatabaseUD db = new DatabaseUD("G:\\Scheduling\\Test");
 		GraphDatabaseService graphDb = db.graphDb;
-		Bike bike = new Bike(db);
+		Bike bike = new Bike(db);	
+		KnowledgeBase kb = new KnowledgeBase(new File("G:\\Scheduling\\Schedule.owl"));	
+		
+		File excelFile=new File("G:\\Scheduling\\import.xlsx");
+		if(!excelFile.exists()){
+			
+		}else{
+			try{
+				Importer importer = new Importer("G:\\Scheduling\\import.xlsx", db, kb);
+				importer.Run();
+			}catch (Exception e1){
+			}// end catch
+		}// end else
 		
 		
-		
-		
-		KnowledgeBase kb = new KnowledgeBase(new File("G:\\Scheduling\\Schedule.owl"));
-
-		Exporter exporter = new Exporter("G:\\Scheduling\\export.xlsx",db,kb);
-		exporter.Run();
-		
-//		File excelFile=new File("G:\\Scheduling\\import.xlsx");
-//		if(!excelFile.exists()){
-//			
-//		}else{
-//			try{
-//				Importer importer = new Importer("G:\\Scheduling\\import.xlsx", db, kb);
-//				importer.Run();
-//			}catch (Exception e1){
-//			}// end catch
-//		}// end else
-//		
-//		
-//		try(Transaction tx = graphDb.beginTx()){
-//			
-//			bike.SetClock();
-//			
-//			bike.PreProcess();
-//			
-//			bike.DecomposeOrder();
-//			
-//			bike.GenerateJobs();
-//			
-//			bike.InitializeTimeConstraints();
-//			
+		try(Transaction tx = graphDb.beginTx()){
+			
+			bike.SetClock();
+			
+			bike.PreProcess();
+			
+			bike.DecomposeOrder();
+			
+			bike.GenerateJobs();
+			
+			bike.InitializeTimeConstraints();
+			
 //			bike.Schedule();
 //			
 //			bike.Output("G:\\Scheduling\\output.xlsx");
-//			tx.success();
-//		}
-//		
-//		
-//		
+			tx.success();
+		}
+		
+		
+		
+		
+		Exporter exporter = new Exporter("G:\\Scheduling\\export.xlsx",db,kb);
+		exporter.Run();
+		
 		db.Shutdown();
 		graphDb.shutdown();
 //		

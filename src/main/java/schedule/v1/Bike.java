@@ -204,6 +204,7 @@ public class Bike {
 		
 		// Decompose orders
 		String cql2 = "match(so:SalesOrder)-[pp:ProducePart]->(p:Part) "
+				+ "match (o:Order)-[:HaveJob]->(job) "
 				+ "match path=(p)-[:RelyPart*1..]->(p1:ProcessedPart)"
 				+ "merge (so)-[:HaveOrder]->(o:Order)-[:ProducePart]->(p1) on create set o.orderId=so.salesOrderId+\"-\"+length(path)+\"-\"+id(o) "
 				+ "on create set o.status=\"Rest\"";
@@ -348,7 +349,7 @@ public class Bike {
 		while(rootOrderNodes.hasNext()){
 			Node rootOrder = (Node)rootOrderNodes.next();		
 			Node salesOrder = rootOrder.getSingleRelationship(Bike.RelationshipTypes.HaveOrder, Direction.INCOMING).getOtherNode(rootOrder);
-			Calendar calendar = utils.ParseCalenderYMD(salesOrder.getProperty("dueDate").toString());
+			Calendar calendar = utils.ParseCalenderYMDHM(salesOrder.getProperty("dueDate").toString());
 			
 			System.out.println(salesOrder.getProperty("salesOrderId")+":"+utils.FormatCalendar(calendar));
 			UpdateOrderTimeBackward(rootOrder, calendar); 
@@ -358,7 +359,7 @@ public class Bike {
 		while(leafOrderNodes.hasNext()){
 			Node leafOrder = (Node)leafOrderNodes.next();
 			Node salesOrder = leafOrder.getSingleRelationship(Bike.RelationshipTypes.HaveOrder, Direction.INCOMING).getOtherNode(leafOrder);
-			Calendar calendar = utils.ParseCalenderYMD(salesOrder.getProperty("arrivalDate").toString());
+			Calendar calendar = utils.ParseCalenderYMDHM(salesOrder.getProperty("arrivalDate").toString());
 			
 			System.out.println(salesOrder.getProperty("salesOrderId")+":"+utils.FormatCalendar(calendar));
 			UpdateOrderTimeForward(leafOrder, calendar);
@@ -368,8 +369,8 @@ public class Bike {
 	
 	public void SetClock(){
 		Node clockNode = graphDb.createNode(Bike.Labels.Clock);
-		clockNode.setProperty("timestamp", "2000-01-01 00:00");
-		db.RunCQL("match (r:Resource) set r.timestamp=\"2000-01-01 00:00\"");
+		clockNode.setProperty("timestamp", "2018-05-01 00:00");
+		db.RunCQL("match (r:Resource) set r.timestamp=\"2018-05-01 00:00\"");
 	}
 	
 	public void Schedule(){
@@ -403,8 +404,9 @@ public class Bike {
 				String  clock= (String)loadRes.getProperty("timestamp");
 				if(clock.compareTo(sysClock)<0){
 					loadRes.setProperty("timestamp", sysClock);
-					clock = sysClock;
 					System.out.println(String.format("Res %s, clock %s -> %s", loadRes.getProperty("name"), clock, sysClock));
+					clock = sysClock;
+					
 				}else if (clock.compareTo(sysClock)>0){
 					break;
 				}

@@ -24,6 +24,10 @@ public class App {
 			Font font=new Font("Microsoft YaHei UI", Font.PLAIN, 15);
 			UIManager.put("OptionPane.messageFont",font); 
 			UIManager.put("OptionPane.buttonFont",font);
+			
+			UI ui=new UI();
+			
+			log.close();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -31,7 +35,7 @@ public class App {
 		
 		
 		
-		UI ui=new UI();
+		
 
 	}
 

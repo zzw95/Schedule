@@ -88,8 +88,8 @@ public class UI {
 		GridBagLayout gbl_choosePanel = new GridBagLayout();
 		gbl_choosePanel.columnWidths = new int[]{0, 0};
 		gbl_choosePanel.rowHeights = new int[]{200, 125, 250,0};
-		gbl_choosePanel.columnWeights = new double[]{1.0, Double.MIN_VALUE};
-		gbl_choosePanel.rowWeights = new double[]{1.0, 1.0, 1.0,Double.MIN_VALUE};
+ 		gbl_choosePanel.columnWeights = new double[]{1.0, Double.MIN_VALUE};
+//		gbl_choosePanel.rowWeights = new double[]{1.0, 1.0, 1.0,Double.MIN_VALUE};
 		choosePanel.setLayout(gbl_choosePanel);
 		
 		ontoPanel = new JPanel();

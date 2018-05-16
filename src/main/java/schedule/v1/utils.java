@@ -29,19 +29,19 @@ import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 public class utils {
 	
 
-	public static Calendar ParseCalenderYMD(String str){
-		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-		try{
-			Date date =df.parse(str);
-			Calendar calendar = Calendar.getInstance();
-			calendar.setTime(date);
-			return calendar;
-		}catch (ParseException ex){
-			System.out.println("Fail to parse the calnedar string "+str);
-			return null;
-		}
-		
-	}
+//	public static Calendar ParseCalenderYMD(String str){
+//		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+//		try{
+//			Date date =df.parse(str);
+//			Calendar calendar = Calendar.getInstance();
+//			calendar.setTime(date);
+//			return calendar;
+//		}catch (ParseException ex){
+//			System.out.println("Fail to parse the calnedar string "+str);
+//			return null;
+//		}
+//		
+//	}
 	
 	public static Calendar ParseCalenderYMDHM(String str){
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
