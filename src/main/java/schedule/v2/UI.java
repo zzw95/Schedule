@@ -17,6 +17,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -48,12 +49,12 @@ import org.neo4j.graphdb.Transaction;
 
 public class UI {
 	JFrame frame;
-	JPanel choosePanel, ontoPanel, importPanel, cqlPanel, schedulePanel;
+	JPanel choosePanel, ontoPanel, importPanel, cqlPanel, schedulePanel, checkBoxPanel;
 	JTextField inputOntoField, inputDbField, inputExcelField, cqlField, outputExcelField, exportExcelField;
 	JButton inputOntoButton, loadOntoButton, queryOntoButton, inputDbButton, inputExcelButton, startDbButton, importDbButton, runCqlButton, outputExcelButton, genButton, exportExcelButton, exportButton;
 	JComboBox ontoComboBox;
 	JTextArea ontoInfoTextArea, cqlInfoTextArea;
-	
+	JCheckBox mergeCheckBox, stockCheckBox;  
 	File tempDir;
 	
 	KnowledgeBase kb;
@@ -106,7 +107,7 @@ public class UI {
 		gbl_ontoPanel.columnWidths = new int[]{200, 0};
 		gbl_ontoPanel.rowHeights = new int[]{0, 0, 45,0};
 		gbl_ontoPanel.columnWeights = new double[]{0.0, 1.0};
-		gbl_ontoPanel.rowWeights = new double[]{0.0, 0.0, 0.0,0.0};
+		//gbl_ontoPanel.rowWeights = new double[]{0.0, 0.0, 0.0,0.0};
 		ontoPanel.setLayout(gbl_ontoPanel);
 		
 		inputOntoButton = new JButton("Choose Ontology");
@@ -351,10 +352,25 @@ public class UI {
 		choosePanel.add(schedulePanel, gbc_schedulePanel);
 		GridBagLayout gbl_schedulePanel = new GridBagLayout();
 		gbl_schedulePanel.columnWidths = new int[]{150, 0,100};
-		gbl_schedulePanel.rowHeights = new int[]{0, 0, 0};
-		gbl_schedulePanel.columnWeights = new double[]{0.0, 1.0,0.0};
-		gbl_schedulePanel.rowWeights = new double[]{0.0, 0.0, 0.0};
+		gbl_schedulePanel.rowHeights = new int[]{50, 50};
+		gbl_schedulePanel.columnWeights = new double[]{0, 1.0,0};
+		gbl_schedulePanel.rowWeights = new double[]{1.0, 1.0};
 		schedulePanel.setLayout(gbl_schedulePanel);
+		
+		checkBoxPanel = new JPanel();
+		mergeCheckBox = new JCheckBox("Merge Orders");
+		mergeCheckBox.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 15));
+		checkBoxPanel.add(mergeCheckBox);
+		stockCheckBox = new JCheckBox("Stock Constrains");
+		stockCheckBox.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 15));
+		checkBoxPanel.add(stockCheckBox);
+		GridBagConstraints gbc_checkBoxPanel = new GridBagConstraints();
+		gbc_checkBoxPanel.fill = GridBagConstraints.BOTH;
+		gbc_checkBoxPanel.insets = new Insets(5, 5, 5, 5);
+		gbc_checkBoxPanel.gridx = 0;
+		gbc_checkBoxPanel.gridy = 0;
+		gbc_checkBoxPanel.gridwidth = GridBagConstraints.REMAINDER;
+		schedulePanel.add(checkBoxPanel, gbc_checkBoxPanel);
 		
 		outputExcelButton = new JButton("Set Output");
 		outputExcelButton.addActionListener(new outputExcelButtonAL());
@@ -363,7 +379,7 @@ public class UI {
 		gbc_outputExcelButton.fill = GridBagConstraints.BOTH;
 		gbc_outputExcelButton.insets = new Insets(5, 5, 5, 5);
 		gbc_outputExcelButton.gridx = 0;
-		gbc_outputExcelButton.gridy = 0;
+		gbc_outputExcelButton.gridy = 1;
 		schedulePanel.add(outputExcelButton, gbc_outputExcelButton);
 		
 		outputExcelField = new JTextField();
@@ -372,7 +388,7 @@ public class UI {
 		gbc_outputExcelField.insets = new Insets(5, 5, 5, 5);
 		gbc_outputExcelField.fill = GridBagConstraints.BOTH;
 		gbc_outputExcelField.gridx = 1;
-		gbc_outputExcelField.gridy = 0;
+		gbc_outputExcelField.gridy = 1;
 		schedulePanel.add(outputExcelField, gbc_outputExcelField);
 		
 		genButton = new JButton("Generate ");
@@ -382,7 +398,7 @@ public class UI {
 		gbc_genButton.fill = GridBagConstraints.BOTH;
 		gbc_genButton.insets = new Insets(5, 5, 5, 5);
 		gbc_genButton.gridx = 2;
-		gbc_genButton.gridy = 0;
+		gbc_genButton.gridy = 1;
 		schedulePanel.add(genButton, gbc_genButton);
 		
 
@@ -390,7 +406,7 @@ public class UI {
 		frame.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 15));
 		frame.setTitle("Neo4j Graph Database Application");
 		//frame.setBounds(100, 100, 750, 750);
-		frame.setSize(800, 800);
+		frame.setSize(850, 850);
 		frame.setLocationRelativeTo(null);
 		//frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
@@ -605,7 +621,7 @@ public class UI {
 				if(!outputExcelField.getText().equals("")){
 					Scheduler sch = new Scheduler(db, outputExcelField.getText());
 					try {
-						sch.Generate();
+						sch.Generate(mergeCheckBox.isSelected(), stockCheckBox.isSelected());
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();

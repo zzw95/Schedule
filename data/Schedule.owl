@@ -123,7 +123,6 @@
                 <owl:unionOf rdf:parseType="Collection">
                     <rdf:Description rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Job"/>
                     <rdf:Description rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Operation"/>
-                    <rdf:Description rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Order"/>
                 </owl:unionOf>
             </owl:Class>
         </rdfs:domain>
@@ -460,6 +459,14 @@
     <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#LeafOrder -->
 
     <owl:Class rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#LeafOrder">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Order"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#MergedOrder -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#MergedOrder">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Order"/>
     </owl:Class>
     

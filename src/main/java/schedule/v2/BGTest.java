@@ -46,11 +46,13 @@ public class BGTest {
 			
 			bike.DecomposeOrder();
 			
+			bike.MergeOrder();
+			
 			bike.GenerateJobs();
 			
 			bike.InitializeTimeConstraints();
 			
-			bike.Schedule();
+			bike.Schedule(true);
 			
 			bike.Output("G:\\Scheduling\\output.xlsx");
 			tx.success();

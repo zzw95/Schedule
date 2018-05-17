@@ -6,7 +6,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
@@ -51,7 +53,8 @@ public class Bike {
         LeafOrder,
         Purchase,
         Job,
-        Clock
+        Clock,
+        MergedOrder
 	}
 	
 	public enum RelationshipTypes implements RelationshipType {
@@ -226,6 +229,115 @@ public class Bike {
 		
 	}
 	
+	public void MergeOrder(){
+		// Merge LeafOrder First
+		String cql1 = "match (o:LeafOrder)-[pp:ProducePart]->(p:Part) return p, collect(o), sum(pp.partNum)";
+		Result result1 = graphDb.execute(cql1);
+		while(result1.hasNext()){
+			Map<String, Object> reMap = result1.next();
+			Node partNode = (Node)reMap.get("p");
+			ArrayList<Node> orderNodes = (ArrayList<Node>)reMap.get("collect(o)");
+			if(orderNodes.size()>1){
+				Node newOrder = graphDb.createNode(Bike.Labels.Order);
+				String newOrderId = "";
+				String info="";
+				newOrder.addLabel(Bike.Labels.LeafOrder);
+				newOrder.addLabel(Bike.Labels.MergedOrder);
+				//Prop: orderId,status
+				//Relate: ProducePart, RelyOrder, HaveOrder
+				for(Node order:orderNodes){
+					ArrayList<Node> postOrders = db.GetRelateNodes(order, Bike.RelationshipTypes.RelyOrder, Direction.INCOMING);
+					for(Node postOrder:postOrders){
+						postOrder.createRelationshipTo(newOrder, Bike.RelationshipTypes.RelyOrder);
+					}
+					ArrayList<Node> salesOrders = db.GetRelateNodes(order, Bike.RelationshipTypes.HaveOrder, Direction.INCOMING);
+					for(Node salesOrder:salesOrders){
+						salesOrder.createRelationshipTo(newOrder, Bike.RelationshipTypes.HaveOrder);
+					}
+					String orderId = (String)order.getProperty("orderId");
+					String[] ss = orderId.split("-");
+					newOrderId += ss[0]+"-"+ss[1]+"-"+ss[2]+"-";
+					db.DeleteNode(order.getId());
+					info += String.format("[Order %s], ", orderId);
+				}
+				long partNum = (long)reMap.get("sum(pp.partNum)");
+				Relationship pp = newOrder.createRelationshipTo(partNode, Bike.RelationshipTypes.ProducePart);
+				pp.setProperty("partNum", partNum);
+				newOrderId += newOrder.getId();
+				newOrder.setProperty("orderId", newOrderId);
+				newOrder.setProperty("status", "Loading");
+				info += String.format("-> new [Order %s], produce [Part %s]", newOrderId, partNode.getProperty("partId"));
+				System.out.println(info);
+				
+			}
+		}
+		
+		while(true){
+			boolean update = false;
+			String cq2 = "match (mo:MergedOrder)<-[:RelyOrder]-(o:Order)-[pp:ProducePart]->(p:Part) where not o:MergedOrder return p, collect(o)";
+			Result result2 = graphDb.execute(cq2);
+			while(result2.hasNext()){
+				Map<String, Object> reMap = result2.next();
+				Node partNode = (Node)reMap.get("p");
+				ArrayList<Node> orderNodes = (ArrayList<Node>)reMap.get("collect(o)");
+				Set<Node> orderSets = new HashSet<Node>(orderNodes);
+				if(orderSets.toArray().length>1){
+					System.out.println(orderSets);
+					update=true;
+					Node newOrder = graphDb.createNode(Bike.Labels.Order);
+					newOrder.addLabel(Bike.Labels.MergedOrder);
+					String newOrderId = "";
+					String info="";
+					long partNum = 0;
+					//Prop: orderId,status
+					//Relate: ProducePart, RelyOrder, HaveOrder
+					for(Node order:orderSets){
+						ArrayList<Node> postOrders = db.GetRelateNodes(order, Bike.RelationshipTypes.RelyOrder, Direction.INCOMING);
+						for(Node postOrder:postOrders){
+							postOrder.createRelationshipTo(newOrder, Bike.RelationshipTypes.RelyOrder);
+						}
+						ArrayList<Node> preOrders = db.GetRelateNodes(order, Bike.RelationshipTypes.RelyOrder, Direction.OUTGOING);
+						if(!newOrder.hasRelationship(Bike.RelationshipTypes.RelyOrder, Direction.OUTGOING)){
+							//In case of duplicate relationships
+							for(Node preOrder: preOrders){
+								//MergedOrder
+								newOrder.createRelationshipTo(preOrder, Bike.RelationshipTypes.RelyOrder);
+							}
+						}
+						
+						ArrayList<Node> salesOrders = db.GetRelateNodes(order, Bike.RelationshipTypes.HaveOrder, Direction.INCOMING);
+						for(Node salesOrder:salesOrders){
+							salesOrder.createRelationshipTo(newOrder, Bike.RelationshipTypes.HaveOrder);
+						}
+						if(order.hasLabel(Bike.Labels.RootOrder)){
+							newOrder.addLabel(Bike.Labels.RootOrder);
+						}
+						Relationship pp = order.getSingleRelationship(Bike.RelationshipTypes.ProducePart, Direction.OUTGOING);
+						partNum += (long)pp.getProperty("partNum");
+						String orderId = (String)order.getProperty("orderId");
+						String[] ss = orderId.split("-");
+						newOrderId += ss[0]+"-"+ss[1]+"-"+ss[2]+"-";
+						db.DeleteNode(order.getId());
+						info += String.format("[Order %s], ", orderId);
+					}	
+					Relationship pp = newOrder.createRelationshipTo(partNode, Bike.RelationshipTypes.ProducePart);
+					pp.setProperty("partNum", partNum);
+					newOrderId += newOrder.getId();
+					newOrder.setProperty("orderId", newOrderId);
+					newOrder.setProperty("status", "Rest");
+					info += String.format("-> new [Order %s], produce [Part %s]", newOrderId, partNode.getProperty("partId"));
+					System.out.println(info);
+				}
+			}
+			
+			if(!update){
+				break;
+			}
+		}
+		
+		
+	}
+	
 	public void GenerateJobs(){
 		// Generate operation jobs
 		String cql1 = "match (o:Order)-[pp:ProducePart]->(p:Part)-[:AdoptOp]->(op:Operation)-[ar:AdoptRes]->(res) "
@@ -352,21 +464,35 @@ public class Bike {
 		ResourceIterator<Node> rootOrderNodes = graphDb.findNodes(Bike.Labels.RootOrder);
 		while(rootOrderNodes.hasNext()){
 			Node rootOrder = (Node)rootOrderNodes.next();		
-			Node salesOrder = rootOrder.getSingleRelationship(Bike.RelationshipTypes.HaveOrder, Direction.INCOMING).getOtherNode(rootOrder);
-			Calendar calendar = utils.ParseCalenderYMDHM(salesOrder.getProperty("dueDate").toString());
-			
-			System.out.println(salesOrder.getProperty("salesOrderId")+":"+utils.FormatCalendar(calendar));
-			UpdateOrderTimeBackward(rootOrder, calendar); 
+			//Node salesOrder = rootOrder.getSingleRelationship(Bike.RelationshipTypes.HaveOrder, Direction.INCOMING).getOtherNode(rootOrder);
+			// Choose the earliest [dueDate]
+			Calendar calendarEarliest = null;
+			for(Relationship ho: rootOrder.getRelationships(Bike.RelationshipTypes.HaveOrder, Direction.INCOMING)){
+				Node salesOrder = ho.getOtherNode(rootOrder);
+				Calendar calendar = utils.ParseCalenderYMDHM(salesOrder.getProperty("dueDate").toString());
+				System.out.println(salesOrder.getProperty("salesOrderId")+":"+utils.FormatCalendar(calendar));
+				if(calendarEarliest==null || calendar.compareTo(calendarEarliest)<0){
+					calendarEarliest = calendar;
+				}
+			}
+			UpdateOrderTimeBackward(rootOrder, calendarEarliest); 
 		}
 		
 		ResourceIterator<Node> leafOrderNodes = graphDb.findNodes(Bike.Labels.LeafOrder);
 		while(leafOrderNodes.hasNext()){
 			Node leafOrder = (Node)leafOrderNodes.next();
-			Node salesOrder = leafOrder.getSingleRelationship(Bike.RelationshipTypes.HaveOrder, Direction.INCOMING).getOtherNode(leafOrder);
-			Calendar calendar = utils.ParseCalenderYMDHM(salesOrder.getProperty("arrivalDate").toString());
-			
-			System.out.println(salesOrder.getProperty("salesOrderId")+":"+utils.FormatCalendar(calendar));
-			UpdateOrderTimeForward(leafOrder, calendar);
+			//Node salesOrder = leafOrder.getSingleRelationship(Bike.RelationshipTypes.HaveOrder, Direction.INCOMING).getOtherNode(leafOrder);
+			// Choose the latest [arrivalDate]
+			Calendar calendarLatest =null;
+			for(Relationship ho: leafOrder.getRelationships(Bike.RelationshipTypes.HaveOrder, Direction.INCOMING)){
+				Node salesOrder = ho.getOtherNode(leafOrder);
+				Calendar calendar = utils.ParseCalenderYMDHM(salesOrder.getProperty("arrivalDate").toString());
+				System.out.println(salesOrder.getProperty("salesOrderId")+":"+utils.FormatCalendar(calendar));
+				if(calendarLatest==null || calendar.compareTo(calendarLatest)>0){
+					calendarLatest = calendar;
+				}
+			}
+			UpdateOrderTimeForward(leafOrder, calendarLatest);
 		}
 
 	}
@@ -377,7 +503,7 @@ public class Bike {
 		db.RunCQL("match (r:Resource) set r.timestamp=\"2018-05-01 00:00\"");
 	}
 	
-	public void Schedule(){
+	public void Schedule(boolean stockConstraints){
 		
 		Node sysClockNode = graphDb.findNodes(Bike.Labels.Clock).next();
 		String sysClock = (String)sysClockNode.getProperty("timestamp");
@@ -386,16 +512,18 @@ public class Bike {
 		
 		// Add the supplyDate of Purchase to [clockSets]
 		ArrayList<Node> purNodes = new ArrayList<Node>();
-		ResourceIterator<Node> purs= graphDb.findNodes(Bike.Labels.Purchase);
-		while(purs.hasNext()){
-			Node purNode = purs.next();
-			purNodes.add(purNode);
-			String clock = (String)purNode.getProperty("supplyDate");
-			if(!clockSets.contains(clock)){
-				clockSets.add(clock);
+		if(stockConstraints){
+			ResourceIterator<Node> purs= graphDb.findNodes(Bike.Labels.Purchase);
+			while(purs.hasNext()){
+				Node purNode = purs.next();
+				purNodes.add(purNode);
+				String clock = (String)purNode.getProperty("supplyDate");
+				if(!clockSets.contains(clock)){
+					clockSets.add(clock);
+				}
 			}
 		}
-		
+			
 		ArrayList<Node> resNodes = new ArrayList<Node>();
 		ResourceIterator<Node> ress = graphDb.findNodes(Bike.Labels.Resource);
 		while(ress.hasNext()){
@@ -417,13 +545,15 @@ public class Bike {
 			clockSets.remove(0);
 			sysClockNode.setProperty("timestamp", sysClock);
 			
-			if(!purNodes.isEmpty()){
-				ArrayList<Node> loadPurs = db.GetCQLNodes(String.format("match(pur:Purchase)-[sp:SupplyPart]->(p:Part) where pur.supplyDate=\"%s\" set p.stock=p.stock+sp.partNum return pur", sysClock));
-				if(!loadPurs.isEmpty()){
-					purNodes.removeAll(loadPurs);
+			if(stockConstraints){
+				if(!purNodes.isEmpty()){
+					ArrayList<Node> loadPurs = db.GetCQLNodes(String.format("match(pur:Purchase)-[sp:SupplyPart]->(p:Part) where pur.supplyDate=\"%s\" set p.stock=p.stock+sp.partNum return pur", sysClock));
+					if(!loadPurs.isEmpty()){
+						purNodes.removeAll(loadPurs);
+					}
 				}
 			}
-			
+				
 			boolean loaded=false;
 			for(Node loadRes:resNodes){
 				String  clock= (String)loadRes.getProperty("timestamp");
@@ -454,24 +584,26 @@ public class Bike {
 				
 				for(Node loadJob: jobNodes){
 					
-					// Stock constraint
-					if(loadJob.hasRelationship(Bike.RelationshipTypes.NeedPart)){
-						boolean meet=true;
-						for(Relationship npRel:loadJob.getRelationships(Bike.RelationshipTypes.NeedPart, Direction.OUTGOING)){
-							Node npart = npRel.getOtherNode(loadJob);
-							if(npart.hasLabel(Bike.Labels.RawPart)){
-								long stock = (long)npart.getProperty("stock");
-								long npNum = (long)npRel.getProperty("partNum");
-								if(stock<npNum){
-									meet=false;
-									break;
+					if(stockConstraints){
+						// Stock constraint
+						if(loadJob.hasRelationship(Bike.RelationshipTypes.NeedPart)){
+							boolean meet=true;
+							for(Relationship npRel:loadJob.getRelationships(Bike.RelationshipTypes.NeedPart, Direction.OUTGOING)){
+								Node npart = npRel.getOtherNode(loadJob);
+								if(npart.hasLabel(Bike.Labels.RawPart)){
+									long stock = (long)npart.getProperty("stock");
+									long npNum = (long)npRel.getProperty("partNum");
+									if(stock<npNum){
+										meet=false;
+										break;
+									}
 								}
 							}
+							if(!meet){
+								continue;
+							}
 						}
-						if(!meet){
-							continue;
-						}
-					}
+					}	
 					
 					// Update the clock of loadJob
 					loadJob.setProperty("startTime", clock);
@@ -496,16 +628,18 @@ public class Bike {
 					Node loadOrder = loadJob.getSingleRelationship(Bike.RelationshipTypes.HaveJob, Direction.INCOMING).getOtherNode(loadJob);
 					System.out.println(String.format("Res %s:start %s, end %s, job %s, order %s\n", resName, clock, utils.FormatCalendar(endCalendar), loadJob.getProperty("type"), loadOrder.getProperty("orderId")));
 					
-					// Update the stock of needed RawPart
-					for(Relationship npRel:loadJob.getRelationships(Bike.RelationshipTypes.NeedPart, Direction.OUTGOING)){
-						Node npart = npRel.getOtherNode(loadJob);
-						if(npart.hasLabel(Bike.Labels.RawPart)){
-							long stock = (long)npart.getProperty("stock");
-							long npNum = (long)npRel.getProperty("partNum");
-							npart.setProperty("stock", stock-npNum);
-							System.out.println(String.format("RawPart %s, stock %d -> %d", npart.getProperty("partId"), stock, npart.getProperty("stock")));
+					if(stockConstraints){
+						// Update the stock of needed RawPart
+						for(Relationship npRel:loadJob.getRelationships(Bike.RelationshipTypes.NeedPart, Direction.OUTGOING)){
+							Node npart = npRel.getOtherNode(loadJob);
+							if(npart.hasLabel(Bike.Labels.RawPart)){
+								long stock = (long)npart.getProperty("stock");
+								long npNum = (long)npRel.getProperty("partNum");
+								npart.setProperty("stock", stock-npNum);
+								System.out.println(String.format("RawPart %s, stock %d -> %d", npart.getProperty("partId"), stock, npart.getProperty("stock")));
+							}
 						}
-					}
+					}					
 					
 					break;
 				}					

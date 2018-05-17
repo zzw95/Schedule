@@ -167,4 +167,9 @@ public class DatabaseUD {
 		return nodes;
 	}
 
+	public boolean DeleteNode(long id){
+		String cql = String.format("match (n) where id(n)=%d detach delete n", id);
+		return RunCQL(cql);
+	}
+
 }

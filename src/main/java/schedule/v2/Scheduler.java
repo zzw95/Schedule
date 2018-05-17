@@ -18,7 +18,7 @@ public class Scheduler {
 		bike=new Bike(db);
 	}
 	
-	public void Generate() throws IOException{
+	public void Generate(boolean mergeOrders, boolean stockConstraints) throws IOException{
 		try(Transaction tx = graphDb.beginTx()){
 			
 			bike.SetClock();
@@ -27,11 +27,15 @@ public class Scheduler {
 			
 			bike.DecomposeOrder();
 			
+			if(mergeOrders){
+				bike.MergeOrder();
+			}
+			
 			bike.GenerateJobs();
 			
 			bike.InitializeTimeConstraints();
 			
-			bike.Schedule();
+			bike.Schedule(stockConstraints);
 			
 			//bike.Output(outputExcel);
 			tx.success();
