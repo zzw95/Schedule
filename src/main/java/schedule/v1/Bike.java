@@ -339,7 +339,7 @@ public class Bike {
 		
 		// Generate the precedence of Operations according to opNo ( Relation OpNext ) 
 		String cql4 = "match (p:Part)-[:AdoptOp]-> (op1:Operation)  "
-				+ "match (p)-[:AdoptOp]->(op2:Operation) where op2.opNo-op1.opNo=10 create (op1)-[:OpNext]->(op2)";
+				+ "match (p)-[:AdoptOp]->(op2:Operation) where op2.opNo-op1.opNo=10 merge (op1)-[:OpNext]->(op2)";
 		this.db.RunCQL(cql4);
 	}
 	

@@ -94,7 +94,7 @@ public class UI {
 		choosePanel.setLayout(gbl_choosePanel);
 		
 		ontoPanel = new JPanel();
-		ontoPanel.setBorder(new TitledBorder(null, "Ontology Query", TitledBorder.CENTER, TitledBorder.TOP, new Font("Microsoft YaHei UI", Font.PLAIN, 18), null));
+		ontoPanel.setBorder(new TitledBorder(null, "Conceptual Model Query", TitledBorder.CENTER, TitledBorder.TOP, new Font("Microsoft YaHei UI", Font.PLAIN, 18), null));
 		GridBagConstraints gbc_ontoPanel = new GridBagConstraints();
 		gbc_ontoPanel.ipady = 5;
 		gbc_ontoPanel.ipadx = 5;
@@ -174,7 +174,7 @@ public class UI {
 		ontoPanel.add(scrollPane, gbc_scrollPane);
 		
 		importPanel = new JPanel();
-		importPanel.setBorder(new TitledBorder(null, "Graph Data Import", TitledBorder.CENTER, TitledBorder.TOP, new Font("Microsoft YaHei UI", Font.PLAIN, 18), null));
+		importPanel.setBorder(new TitledBorder(null, "Original Data Import", TitledBorder.CENTER, TitledBorder.TOP, new Font("Microsoft YaHei UI", Font.PLAIN, 18), null));
 		GridBagConstraints gbc_importPanel = new GridBagConstraints();
 		gbc_importPanel.ipady = 5;
 		gbc_importPanel.ipadx = 5;
@@ -249,7 +249,7 @@ public class UI {
 		importPanel.add(importDbButton, gbc_importDbButton);
 		
 		cqlPanel = new JPanel();
-		cqlPanel.setBorder(new TitledBorder(null, "Database Query", TitledBorder.CENTER, TitledBorder.TOP, new Font("Microsoft YaHei UI", Font.PLAIN, 18), null));
+		cqlPanel.setBorder(new TitledBorder(null, "Scheduling Data Query", TitledBorder.CENTER, TitledBorder.TOP, new Font("Microsoft YaHei UI", Font.PLAIN, 18), null));
 		GridBagConstraints gbc_cqlPanel = new GridBagConstraints();
 		gbc_cqlPanel.ipady = 5;
 		gbc_cqlPanel.ipadx = 5;
@@ -262,7 +262,7 @@ public class UI {
 		gbl_cqlPanel.columnWidths = new int[]{150, 0, 100};
 		gbl_cqlPanel.rowHeights = new int[]{50, 150,50};
 		gbl_cqlPanel.columnWeights = new double[]{0.0, 1.0,0.0};
-		gbl_cqlPanel.rowWeights = new double[]{1.0,3.0,1.0};
+		//gbl_cqlPanel.rowWeights = new double[]{1.0,3.0,1.0};
 		cqlPanel.setLayout(gbl_cqlPanel);
 		
 		JLabel jlabel = new JLabel("Cypher Query", JLabel.CENTER);
@@ -404,7 +404,7 @@ public class UI {
 
 		frame.setResizable(false);
 		frame.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 15));
-		frame.setTitle("Neo4j Graph Database Application");
+		frame.setTitle("Scheduling Application Based On Neo4j");
 		//frame.setBounds(100, 100, 750, 750);
 		frame.setSize(850, 850);
 		frame.setLocationRelativeTo(null);

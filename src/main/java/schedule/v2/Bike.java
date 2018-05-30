@@ -44,7 +44,7 @@ public class Bike {
         SalesPart,
         RawPart,
         ProcessedPart,
-        Operation,
+        Process,
         ResourceGroup,
         Resource,
         SalesOrder,
@@ -63,14 +63,14 @@ public class Bike {
 	    NeedPart,
 	    RelyPart,
 	    RelyOrder,
-	    OpNext,
+	    ProcessNext,
 	    JobNext,
-	    HaveRes,
+	    HaveResource,
 	    HaveOrder,
 	    HaveJob,
-	    CorresOp,
-	    AdoptRes,
-	    AdoptOp,
+	    CorresProcess,
+	    AdoptResourceGroup,
+	    AdoptProcess,
 	    CorresPart,
 	    LoadJob
 	}
@@ -83,8 +83,8 @@ public class Bike {
 			//update the calendar
 			Calendar newCalendar = Calendar.getInstance();
 			newCalendar.setTime(calendar.getTime());
-			Double costMin = (Double)job.getSingleRelationship(Bike.RelationshipTypes.AdoptRes, Direction.OUTGOING).getProperty("costMin");	
-			newCalendar.add(Calendar.MINUTE, -costMin.intValue());
+			Double timeCost = (Double)job.getSingleRelationship(Bike.RelationshipTypes.AdoptResourceGroup, Direction.OUTGOING).getProperty("timeCost");	
+			newCalendar.add(Calendar.MINUTE, -timeCost.intValue());
 			//Jobs Backward Traversal (reverse JobNext)
 			ArrayList<Node> preJobs = db.GetRelateNodes(job, Bike.RelationshipTypes.JobNext, Direction.INCOMING);
 			for(Node preJob:preJobs){
@@ -117,9 +117,9 @@ public class Bike {
 		if(order.getDegree(Bike.RelationshipTypes.RelyOrder, Direction.OUTGOING)>0){
 			//update the calendar
 			Calendar newCalendar = utils.ParseCalenderYMDHM   (firstJob.getProperty("latestEndTime").toString());
-			Double costMin = (Double)firstJob.getSingleRelationship(Bike.RelationshipTypes.AdoptRes, Direction.OUTGOING).getProperty("costMin");
-			//System.out.println(costMin);
-			newCalendar.add(Calendar.MINUTE, -costMin.intValue());
+			Double timeCost = (Double)firstJob.getSingleRelationship(Bike.RelationshipTypes.AdoptResourceGroup, Direction.OUTGOING).getProperty("timeCost");
+			//System.out.println(timeCost);
+			newCalendar.add(Calendar.MINUTE, -timeCost.intValue());
 			
 			//Orders Backward Traversal (RelyPart)
 			ArrayList<Node> preOrders = db.GetRelateNodes(order, Bike.RelationshipTypes.RelyOrder, Direction.OUTGOING);
@@ -144,8 +144,8 @@ public class Bike {
 			//update the calendar
 			Calendar newCalendar = Calendar.getInstance();
 			newCalendar.setTime(calendar.getTime());
-			Double costMin = (Double)job.getSingleRelationship(Bike.RelationshipTypes.AdoptRes, Direction.OUTGOING).getProperty("costMin");	
-			newCalendar.add(Calendar.MINUTE, costMin.intValue());
+			Double timeCost = (Double)job.getSingleRelationship(Bike.RelationshipTypes.AdoptResourceGroup, Direction.OUTGOING).getProperty("timeCost");	
+			newCalendar.add(Calendar.MINUTE, timeCost.intValue());
 			
 			//Jobs Forward Traversal (JobNext)
 			ArrayList<Node> postJobs = db.GetRelateNodes(job, Bike.RelationshipTypes.JobNext, Direction.OUTGOING);
@@ -185,9 +185,9 @@ public class Bike {
 		if(order.getDegree(Bike.RelationshipTypes.RelyOrder, Direction.INCOMING)>0){
 			//update the calendar
 			Calendar newCalendar = utils.ParseCalenderYMDHM(lastJob.getProperty("earliestStartTime").toString());
-			Double costMin = (Double)lastJob.getSingleRelationship(Bike.RelationshipTypes.AdoptRes, Direction.OUTGOING).getProperty("costMin");
-			//System.out.println(costMin);
-			newCalendar.add(Calendar.MINUTE, costMin.intValue());
+			Double timeCost = (Double)lastJob.getSingleRelationship(Bike.RelationshipTypes.AdoptResourceGroup, Direction.OUTGOING).getProperty("timeCost");
+			//System.out.println(timeCost);
+			newCalendar.add(Calendar.MINUTE, timeCost.intValue());
 			
 			//Orders Forward Traversal (reverse RelyPart)
 			ArrayList<Node> postOrders = db.GetRelateNodes(order, Bike.RelationshipTypes.RelyOrder, Direction.INCOMING);
@@ -340,21 +340,21 @@ public class Bike {
 	
 	public void GenerateJobs(){
 		// Generate operation jobs
-		String cql1 = "match (o:Order)-[pp:ProducePart]->(p:Part)-[:AdoptOp]->(op:Operation)-[ar:AdoptRes]->(res) "
-				+ "merge (o)-[:HaveJob]->(job:Job{type:op.type, jobNo:op.opNo})-[:CorresOp]->(op) on create set job.status=\"Rest\""
-				+ "merge (job)-[:AdoptRes{costMin:ar.costMin*pp.partNum}]->(res)";
+		String cql1 = "match (o:Order)-[pp:ProducePart]->(p:Part)-[:AdoptProcess]->(pr:Process)-[ar:AdoptResourceGroup]->(res) "
+				+ "merge (o)-[:HaveJob]->(job:Job{type:pr.type, jobNo:pr.processNo})-[:CorresProcess]->(pr) on create set job.status=\"Rest\""
+				+ "merge (job)-[:AdoptResourceGroup{timeCost:ar.timeCost*pp.partNum}]->(res)";
 		this.db.RunCQL(cql1);
 		
-		String cq2 = "match (o:Order)-[pp:ProducePart]->(p:Part)-[:AdoptOp]->(op:Operation)<-[:CorresOp]->(job:Job) "
+		String cq2 = "match (o:Order)-[pp:ProducePart]->(p:Part)-[:AdoptProcess]->(pr:Process)<-[:CorresProcess]-(job:Job) "
 				+ "match (o:Order)-[:HaveJob]->(job) "
-				+ "match (op)-[np:NeedPart]->(p1:Part) "
+				+ "match (pr)-[np:NeedPart]->(p1:Part) "
 				+ "merge (job)-[:NeedPart{partNum:np.partNum*pp.partNum}]->(p1)";
 		this.db.RunCQL(cq2);
 		
 		
 		// Generate the precedence of jobs
-		String cql3 = "match (job1:Job)-[:CorresOp]->(op1)-[:OpNext]->(op2)<-[:CorresOp]-(job2:Job) "
-				+ "match (job1)<-[:HaveJob]-(o)-[:HaveJob]->(job2) "
+		String cql3 = "match (job1:Job)-[:CorresProcess]->(pr1:Process)-[:ProcessNext]->(pr2:Process)<-[:CorresProcess]-(job2:Job) "
+				+ "match (job1)<-[:HaveJob]-(o:Order)-[:HaveJob]->(job2) "
 				+ "merge (job1)-[:JobNext]->(job2)";
 		this.db.RunCQL(cql3);
 		
@@ -440,18 +440,18 @@ public class Bike {
 	
 	public void PreProcess(){
 		// Set Part sub labels ProcessedPart, RawPart
-		String cql1 = "match (p:Part) where (p)-[:AdoptOp]->() set p:ProcessedPart";
+		String cql1 = "match (p:Part) where (p)-[:AdoptProcess]->() set p:ProcessedPart";
 		this.db.RunCQL(cql1);
-		String cql2 = "match (p:Part) where not (p)-[:AdoptOp]->() set p:RawPart";
+		String cql2 = "match (p:Part) where not (p)-[:AdoptProcess]->() set p:RawPart";
 		this.db.RunCQL(cql2);
 		
 		// Generate the Relation RelyPart
-		String cql3 = "match (p1:Part)-[:AdoptOp]->(op:Operation)-[np:NeedPart]->(p2:Part) merge (p1)-[:RelyPart{partNum:np.partNum}]->(p2)";
+		String cql3 = "match (p1:Part)-[:AdoptProcess]->(pr:Process)-[np:NeedPart]->(p2:Part) merge (p1)-[:RelyPart{partNum:np.partNum}]->(p2)";
 		this.db.RunCQL(cql3);
 		
-		// Generate the precedence of Operations according to opNo ( Relation OpNext ) 
-		String cql4 = "match (p:Part)-[:AdoptOp]-> (op1:Operation)  "
-				+ "match (p)-[:AdoptOp]->(op2:Operation) where op2.opNo-op1.opNo=10 create (op1)-[:OpNext]->(op2)";
+		// Generate the precedence of Operations according to processNo ( Relation ProcessNext ) 
+		String cql4 = "match (p:Part)-[:AdoptProcess]-> (pr1:Process)  "
+				+ "match (p)-[:AdoptProcess]->(pr2:Process) where pr2.processNo-pr1.processNo=10 merge (pr1)-[:ProcessNext]->(pr2)";
 		this.db.RunCQL(cql4);
 		
 		// Set RawPart stock, default 0
@@ -569,9 +569,9 @@ public class Bike {
 				
 				//Load the job to the resource
 				String resName = (String)loadRes.getProperty("name");
-				String jobQuery = String.format("match (res:Resource)<-[:HaveRes]-(rg) where res.name=\"%s\" "
+				String jobQuery = String.format("match (res:Resource)<-[:HaveResource]-(rg) where res.name=\"%s\" "
 						+ "match (o:Order) where o.status=\"Loading\" "
-						+ "match (o)-[:HaveJob]->(job)-[:AdoptRes]->(rg) where job.status=\"Loading\" and job.earliestStartTime<=res.timestamp "
+						+ "match (o)-[:HaveJob]->(job)-[:AdoptResourceGroup]->(rg) where job.status=\"Loading\" and job.earliestStartTime<=res.timestamp "
 						+ "return job order by job.latestEndTime, job.earliestStartTime", resName);
 				ArrayList<Node> jobNodes = db.GetCQLNodes(jobQuery);
 				
@@ -607,7 +607,7 @@ public class Bike {
 					
 					// Update the clock of loadJob
 					loadJob.setProperty("startTime", clock);
-					Double cost = (Double)loadJob.getSingleRelationship(Bike.RelationshipTypes.AdoptRes, Direction.OUTGOING).getProperty("costMin");
+					Double cost = (Double)loadJob.getSingleRelationship(Bike.RelationshipTypes.AdoptResourceGroup, Direction.OUTGOING).getProperty("timeCost");
 					Calendar startCalendar = utils.ParseCalenderYMDHM(clock);
 					Calendar endCalendar = Calendar.getInstance();
 					endCalendar.setTime(startCalendar.getTime());

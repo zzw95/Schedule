@@ -145,8 +145,8 @@ public class Exporter {
 					if(i==1){
 						matchCQL += String.format("<-[%s:%s]- (%s:%s) ", relateVarName, op.getIRI().getShortForm(), labelVarName, label.getIRI().getShortForm());
 					}else{
-						matchCQL += String.format("\noptional match (%s:%s)-[%s:%s]-> (%s) ", 
-								labelVarName, label.getIRI().getShortForm(), relateVarName, op.getIRI().getShortForm(), primLabelVarName);
+						matchCQL += String.format("\noptional match (%s) <-[%s:%s]- (%s:%s) ", 
+								primLabelVarName, relateVarName, op.getIRI().getShortForm(), labelVarName, label.getIRI().getShortForm());
 					}
 					prevRelate = op;
 					prevRelateVarName = relateVarName;	
@@ -176,8 +176,8 @@ public class Exporter {
 						if(k==0){
 							matchCQL += String.format("<-[%s:%s]- (%s:%s) ", relateVarName, op.getIRI().getShortForm(), labelVarName, label.getIRI().getShortForm());
 						}else{
-							matchCQL += String.format("\noptional match (%s:%s)-[%s:%s]-> (%s) ", 
-									labelVarName, label.getIRI().getShortForm(), relateVarName, op.getIRI().getShortForm(), prevLabelsVarNames.get(prevLabels.size()-1-k));
+							matchCQL += String.format("\noptional match (%s) <-[%s:%s]- (%s:%s) ", 
+									prevLabelsVarNames.get(prevLabels.size()-1-k), relateVarName, op.getIRI().getShortForm(),labelVarName, label.getIRI().getShortForm());
 						}
 						prevRelate = op;
 						prevRelateVarName = relateVarName;	

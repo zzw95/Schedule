@@ -37,7 +37,7 @@ public class Scheduler {
 			
 			bike.Schedule(stockConstraints);
 			
-			//bike.Output(outputExcel);
+			bike.Output(outputExcel);
 			tx.success();
 		}
 	}

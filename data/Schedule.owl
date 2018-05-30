@@ -21,38 +21,27 @@
     
 
 
-    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#AdoptOp -->
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#AdoptProcess -->
 
-    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#AdoptOp">
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#AdoptProcess">
         <rdfs:domain rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Part"/>
-        <rdfs:range rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Operation"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Process"/>
     </owl:ObjectProperty>
     
 
 
-    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#AdoptRes -->
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#AdoptResourceGroup -->
 
-    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#AdoptRes">
-        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#AdoptResourceGroup">
         <rdfs:domain>
             <owl:Class>
                 <owl:unionOf rdf:parseType="Collection">
                     <rdf:Description rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Job"/>
-                    <rdf:Description rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Operation"/>
+                    <rdf:Description rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Process"/>
                 </owl:unionOf>
             </owl:Class>
         </rdfs:domain>
         <rdfs:range rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#ResourceGroup"/>
-    </owl:ObjectProperty>
-    
-
-
-    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#CorresOp -->
-
-    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#CorresOp">
-        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Job"/>
-        <rdfs:range rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Operation"/>
     </owl:ObjectProperty>
     
 
@@ -62,6 +51,15 @@
     <owl:ObjectProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#CorresPart">
         <rdfs:domain rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Product"/>
         <rdfs:range rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Part"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#CorresProcess -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#CorresProcess">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Job"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Process"/>
     </owl:ObjectProperty>
     
 
@@ -86,10 +84,9 @@
     
 
 
-    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#HaveRes -->
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#HaveResource -->
 
-    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#HaveRes">
-        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#InverseFunctionalProperty"/>
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#HaveResource">
         <rdfs:domain rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#ResourceGroup"/>
         <rdfs:range rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Resource"/>
     </owl:ObjectProperty>
@@ -122,7 +119,7 @@
             <owl:Class>
                 <owl:unionOf rdf:parseType="Collection">
                     <rdf:Description rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Job"/>
-                    <rdf:Description rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Operation"/>
+                    <rdf:Description rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Process"/>
                 </owl:unionOf>
             </owl:Class>
         </rdfs:domain>
@@ -131,11 +128,11 @@
     
 
 
-    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#OpNext -->
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#ProcessNext -->
 
-    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#OpNext">
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Operation"/>
-        <rdfs:range rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Operation"/>
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#ProcessNext">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Process"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Process"/>
     </owl:ObjectProperty>
     
 
@@ -210,17 +207,6 @@
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#SalesOrder"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
-    </owl:DatatypeProperty>
-    
-
-
-    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#costMin -->
-
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#costMin">
-        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#RelationProperty"/>
-        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#R_AdoptRes"/>
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#double"/>
     </owl:DatatypeProperty>
     
 
@@ -313,17 +299,6 @@
     
 
 
-    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#opNo -->
-
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#opNo">
-        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Operation"/>
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
-        <rdfs:comment>工序号</rdfs:comment>
-    </owl:DatatypeProperty>
-    
-
-
     <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#orderId -->
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#orderId">
@@ -359,6 +334,16 @@
                 </owl:unionOf>
             </owl:Class>
         </rdfs:domain>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#processNo -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#processNo">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Process"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
     </owl:DatatypeProperty>
     
@@ -401,6 +386,23 @@
     
 
 
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#status -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#status">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain>
+            <owl:Class>
+                <owl:unionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Job"/>
+                    <rdf:Description rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Order"/>
+                </owl:unionOf>
+            </owl:Class>
+        </rdfs:domain>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
     <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#stock -->
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#stock">
@@ -422,6 +424,17 @@
     
 
 
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#timeCost -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#timeCost">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#RelationProperty"/>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#R_AdoptResourceGroup"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#double"/>
+    </owl:DatatypeProperty>
+    
+
+
     <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#type -->
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#type">
@@ -430,7 +443,7 @@
             <owl:Class>
                 <owl:unionOf rdf:parseType="Collection">
                     <rdf:Description rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Job"/>
-                    <rdf:Description rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Operation"/>
+                    <rdf:Description rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Process"/>
                 </owl:unionOf>
             </owl:Class>
         </rdfs:domain>
@@ -472,12 +485,6 @@
     
 
 
-    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Operation -->
-
-    <owl:Class rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Operation"/>
-    
-
-
     <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Order -->
 
     <owl:Class rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Order"/>
@@ -487,6 +494,12 @@
     <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Part -->
 
     <owl:Class rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Part"/>
+    
+
+
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Process -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#Process"/>
     
 
 
@@ -511,9 +524,9 @@
     
 
 
-    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#R_AdoptRes -->
+    <!-- http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#R_AdoptResourceGroup -->
 
-    <owl:Class rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#R_AdoptRes">
+    <owl:Class rdf:about="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#R_AdoptResourceGroup">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/zzw/ontologies/2018/3/schedule#RelationShip"/>
     </owl:Class>
     
